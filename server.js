@@ -31,14 +31,23 @@ initializeDB().then(() => {
     
     // **Rutes API**
     
-    // 1. Obtindre totes les tasques
+    // 1. Obtindre tots els videojocs (amb opcional filtre per plataforma via query `?platform=`)
     app.get('/api/games', async (req, res) => {
+        const { platform } = req.query;
         await db.read(); // Sempre llegeix abans de llegir dades per obtenir l'últim estat
-        const games = db.data.games;
+        let games = db.data.games || [];
+
+        if (platform) {
+            const p = String(platform).toLowerCase();
+            games = games.filter(game => 
+                Array.isArray(game.platforms) && game.platforms.some(pl => String(pl).toLowerCase() === p)
+            );
+        }
+
         res.json(games);
     });
 
-    // 2. Afegir una nova tasca (ID amb Timestamp)
+    // 2. Afegir un videojoc (ID amb Timestamp)
     app.post('/api/games', async (req, res) => {
         const { title, stock = 0, platforms = [] } = req.body;
         if (!title) {
@@ -101,15 +110,7 @@ initializeDB().then(() => {
         res.json(db.data.games[gameIndex]);
     });
 
-    // 4. Filtrar jocs per plataforma
-    app.get('/api/games/platform/:platform', async (req, res) => {
-        const platform = req.params.platform.toLowerCase();
-        await db.read();
-        const filteredGames = db.data.games.filter(game => 
-            game.platforms.some(p => p.toLowerCase() === platform)
-        );
-        res.json(filteredGames);
-    });
+    // NOTE: El filtratge per plataforma ara es fa amb la query `GET /api/games?platform=PS5`.
 
     // 5. Eliminar un joc
     app.delete('/api/games/:id', async (req, res) => {
