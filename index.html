@@ -205,12 +205,6 @@
         <button type="submit">Afegir al catàleg</button>
     </form>
 
-    <div id="filter-controls" style="display:flex;gap:8px;margin:18px 0 8px 0;align-items:center;">
-        <input type="text" id="filter-platform" placeholder="Filtrar per plataforma (PS5, PC...)" style="padding:8px;border-radius:8px;border:1px solid #e2e8f0;">
-        <button id="filter-btn" style="padding:8px 12px;border-radius:8px;border:none;background:#6366f1;color:#fff;">Filtrar</button>
-        <button id="clear-filter-btn" style="padding:8px 12px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;color:#475569;">Netejar</button>
-    </div>
-
     <div id="games-list">
     </div>
 
@@ -224,14 +218,9 @@
         const gameStockInput = document.getElementById('game-stock');
         const gamePlatformsInput = document.getElementById('game-platforms');
 
-        const filterInput = document.getElementById('filter-platform');
-        const filterBtn = document.getElementById('filter-btn');
-        const clearFilterBtn = document.getElementById('clear-filter-btn');
-
-        async function loadGames(platform = '') {
+        async function loadGames() {
             try {
-                const url = '/api/games' + (platform ? '?platform=' + encodeURIComponent(platform) : '');
-                const response = await fetch(url);
+                const response = await fetch('/api/games');
                 const games = await response.json();
                 gamesList.innerHTML = ''; 
 
@@ -356,16 +345,7 @@
             }
         }
 
-        filterBtn.addEventListener('click', () => {
-            loadGames(filterInput.value.trim());
-        });
-
-        clearFilterBtn.addEventListener('click', () => {
-            filterInput.value = '';
-            loadGames();
-        });
-
-        window.onload = () => loadGames();
+        window.onload = loadGames;
     </script>
 </body>
 </html>
