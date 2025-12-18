@@ -1,0 +1,15 @@
+{
+  "games": [
+    {
+      "id": 1766082266020,
+      "title": "Red Dead Redemption 2",
+      "platforms": [
+        "PS5",
+        "PS4",
+        "Xbox Series",
+        "PC"
+      ],
+      "stock": 100
+    }
+  ]
+}

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Stock - Videojocs</title>
+    <style>
+        /* Tipografía moderna y profesional */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            background-color: #f8fafc; /* Gris muy claro azulado */
+            color: #1e293b; /* Azul oscuro pizarra */
+            line-height: 1.5;
+        }
+
+        h1 {
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: #0f172a;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Contenedor del formulario */
+        #new-game-form { 
+            display: grid;
+            grid-template-columns: 2fr 100px 1.5fr auto;
+            gap: 12px;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+        }
+
+        input {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            color: #334155;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #6366f1; /* Indigo */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        button { 
+            cursor: pointer; 
+            font-family: inherit;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button[type="submit"] {
+            background-color: #6366f1;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        /* Lista de juegos */
+        .task-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 20px; 
+            background-color: white;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .task-item:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .game-info-main {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .game-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .game-stock-badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #6366f1;
+            background: #eef2ff;
+            padding: 2px 10px;
+            border-radius: 99px;
+            width: fit-content;
+            margin-top: 4px;
+        }
+
+        .platforms-list {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 8px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .platform-pill {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Acciones */
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .actions button {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+        .actions button:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+            color: #1e293b;
+        }
+
+        .actions .delete-btn {
+            color: #ef4444;
+        }
+
+        .actions .delete-btn:hover {
+            background-color: #fef2f2;
+            border-color: #fecaca;
+            color: #dc2626;
+        }
+
+        /* Estado vacío */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+            background: #f1f5f9;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+        }
+
+        @media (max-width: 768px) {
+            #new-game-form {
+                grid-template-columns: 1fr;
+            }
+            .task-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            .actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1><span>🎮</span> Gestor de Stock de Videojocs</h1>
+
+    <form id="new-game-form">
+        <input type="text" id="game-title" placeholder="Nom del joc" required>
+        <input type="number" id="game-stock" placeholder="Stock" value="0" min="0">
+        <input type="text" id="game-platforms" placeholder="Plataformes (PS5, PC...)">
+        <button type="submit">Afegir al catàleg</button>
+    </form>
+
+    <div id="games-list">
+        </div>
+
+    <script>
+        // Mantenemos la lógica original de tu script intacta, 
+        // solo ajustamos la creación de elementos para que coincidan con las nuevas clases CSS.
+
+        const gamesList = document.getElementById('games-list');
+        const newGameForm = document.getElementById('new-game-form');
+        const gameTitleInput = document.getElementById('game-title');
+        const gameStockInput = document.getElementById('game-stock');
+        const gamePlatformsInput = document.getElementById('game-platforms');
+
+        async function loadGames() {
+            try {
+                const response = await fetch('/api/games');
+                const games = await response.json();
+                gamesList.innerHTML = ''; 
+
+                if (games.length === 0) {
+                    gamesList.innerHTML = '<div class="empty-state">No hi ha productes al magatzem encara.</div>';
+                    return;
+                }
+
+                games.forEach(game => {
+                    const gameElement = document.createElement('div');
+                    gameElement.className = 'task-item';
+
+                    // Info del juego
+                    const leftDiv = document.createElement('div');
+                    leftDiv.className = 'game-info-main';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'game-title';
+                    title.textContent = game.title;
+
+                    const stockBadge = document.createElement('div');
+                    stockBadge.className = 'game-stock-badge';
+                    stockBadge.textContent = `${game.stock ?? 0} unitats`;
+
+                    const platformsContainer = document.createElement('div');
+                    platformsContainer.className = 'platforms-list';
+                    const plats = game.platforms || [];
+                    if(plats.length > 0) {
+                        plats.forEach(p => {
+                            const pPill = document.createElement('span');
+                            pPill.className = 'platform-pill';
+                            pPill.textContent = p;
+                            platformsContainer.appendChild(pPill);
+                        });
+                    } else {
+                        platformsContainer.textContent = 'Sense plataformes';
+                    }
+
+                    leftDiv.appendChild(title);
+                    leftDiv.appendChild(stockBadge);
+                    leftDiv.appendChild(platformsContainer);
+
+                    // Botones de acción
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'actions';
+
+                    const incBtn = document.createElement('button');
+                    incBtn.textContent = '+';
+                    incBtn.onclick = () => updateStock(game.id, Number(game.stock ?? 0) + 1);
+
+                    const decBtn = document.createElement('button');
+                    decBtn.textContent = '-';
+                    decBtn.onclick = () => updateStock(game.id, Math.max(0, Number(game.stock ?? 0) - 1));
+
+                    const editBtn = document.createElement('button');
+                    editBtn.textContent = 'Editar';
+                    editBtn.onclick = () => {
+                        const current = (game.platforms || []).join(', ');
+                        const input = prompt('Plataformes:', current);
+                        if (input !== null) {
+                            const platforms = input.split(',').map(s => s.trim()).filter(Boolean);
+                            updatePlatforms(game.id, platforms);
+                        }
+                    };
+
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'delete-btn';
+                    delBtn.textContent = 'Eliminar';
+                    delBtn.onclick = () => deleteGame(game.id);
+
+                    actionsDiv.appendChild(decBtn);
+                    actionsDiv.appendChild(incBtn);
+                    actionsDiv.appendChild(editBtn);
+                    actionsDiv.appendChild(delBtn);
+
+                    gameElement.appendChild(leftDiv);
+                    gameElement.appendChild(actionsDiv);
+                    gamesList.appendChild(gameElement);
+                });
+            } catch (error) {
+                gamesList.innerHTML = '<p style="color: red;">Error en carregar dades.</p>';
+            }
+        }
+
+        // --- Funciones de API (Iguales a tu código original) ---
+        newGameForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = gameTitleInput.value.trim();
+            const stock = Number(gameStockInput.value) || 0;
+            const platforms = gamePlatformsInput.value.split(',').map(s => s.trim()).filter(Boolean);
+            await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, stock, platforms })
+            });
+            gameTitleInput.value = ''; gameStockInput.value = '0'; gamePlatformsInput.value = '';
+            loadGames();
+        });
+
+        async function updatePlatforms(id, platforms) {
+            await fetch(`/api/games/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ platforms })
+            });
+            loadGames();
+        }
+
+        async function updateStock(id, stock) {
+            await fetch(`/api/games/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ stock })
+            });
+            loadGames();
+        }
+
+        async function deleteGame(id) {
+            if (confirm('Eliminar aquest joc?')) {
+                await fetch(`/api/games/${id}`, { method: 'DELETE' });
+                loadGames();
+            }
+        }
+
+        window.onload = loadGames;
+    </script>
+</body>
+</html>
