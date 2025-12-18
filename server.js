@@ -1,11 +1,8 @@
-import express from 'express';
-import { join, dirname } from 'path';
-import { Low } from 'lowdb';
-import { JSONFile } from 'lowdb/node'; // Utilitzem lowdb/node per a Node.js
-import { fileURLToPath } from 'url';  // Necessari per obtenir __dirname amb mòduls ES
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const express = require('express');
+const path = require('path');
+const { join } = path;
+const { Low } = require('lowdb');
+const { JSONFile } = require('lowdb/node'); // Utilitzem lowdb/node per a Node.js
 
 const app = express();
 const port = 3000;
